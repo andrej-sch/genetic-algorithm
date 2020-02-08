@@ -1,0 +1,23 @@
+# number of a fucntion, from 1 to 5
+function: 1
+
+searchDomain:
+        lowerBound: -10
+        upperBound: 10
+        precision: 10E-6
+
+algorithm:
+    numberOfIterations: 100
+    populationSize: 50
+    selection: # proportional, rank, tournament
+        type: tournament
+        tournamentSize: 3
+    crossover: # one-point, two-point, uniform
+        type: uniform
+    mutation: # low, medium, high, by_value
+        type: low
+        probability: 0.001
+    elitism: # enabled, disabled
+        strategy: enabled
+        size: 2 # number of individuals
+    
