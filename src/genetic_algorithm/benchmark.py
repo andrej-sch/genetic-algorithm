@@ -20,19 +20,16 @@ def get_scores(chromosomes: np.ndarray, dim_muber: int, chrom_length: int, param
 
     real_nums = _decode(chromosomes, dim_muber, chrom_length, params)
 
-    fun_values = _get_fun_values(real_nums, params)
+    fun_values = _get_fun_values(real_nums, params).reshape(-1)
     fit_values = _convert_to_fitness(fun_values, params)
-    #optimum_value = _get_answer(params['function'])
 
     return fit_values, real_nums
 
-def get_score(solution: np.ndarray, params: dict):
+def get_value(solution: np.ndarray, params: dict):
     '''
     '''
 
-    value = _get_fun_values(solution, params)
-
-    return value
+    return  _get_fun_values(solution, params).reshape(-1)
 
 def solved(best_ind: dict, dim_number: int, params: dict):
     '''
@@ -141,18 +138,17 @@ def _get_fun_values(real_nums: np.ndarray, params: dict):
     '''
 
     function = params['function']
-    fun_values = None
 
     if function == 1:
-        fun_values = _function_1(real_nums)
+        return _function_1(real_nums)
     elif function == 2:
-        fun_values = _function_2(real_nums)
+        return _function_2(real_nums)
     elif function == 3:
-        fun_values = _function_3(real_nums)
+        return _function_3(real_nums, _square)
     elif function == 4:
-        fun_values = _function_4(real_nums)
+        return _function_4(real_nums, _square)
 
-    return fun_values.reshape(-1)
+    return None # error
 
 def _function_1(real_nums: np.ndarray) -> np.ndarray:
     '''
@@ -166,9 +162,7 @@ def _function_1(real_nums: np.ndarray) -> np.ndarray:
         np.ndarray: Function values.
     '''
 
-    fun_values = np.abs(real_nums)
-
-    return fun_values
+    return np.abs(real_nums)
 
 def _function_2(real_nums: np.ndarray) -> np.ndarray:
     '''
@@ -182,11 +176,9 @@ def _function_2(real_nums: np.ndarray) -> np.ndarray:
         np.ndarray: Function values.
     '''
 
-    fun_values = -10.0*np.cos(real_nums) + np.abs(0.001*real_nums)
+    return -10.0*np.cos(real_nums) + np.abs(0.001*real_nums)
 
-    return fun_values
-
-def _function_3(real_nums: np.ndarray) -> np.ndarray:
+def _function_3(x: np.ndarray, sq_term) -> np.ndarray:
     '''
     Function 3. Rastrigin function.
     f(x1,x2)=0.1*x1^2+0.1*x2^2-4*cos(0.8*x1)-4*cos(0.8*x2)+8.
@@ -199,27 +191,27 @@ def _function_3(real_nums: np.ndarray) -> np.ndarray:
         np.ndarray: Function values.
     '''
 
-    fun_values = 0.1*real_nums[:, 0]**2 + 0.1*real_nums[:, 1]**2 \
-        - 4*np.cos(0.8*real_nums[:, 0]) - 4*np.cos(0.8*real_nums[:, 1]) + 8
+    return 0.1*sq_term(x[:, 0]) + 0.1*sq_term(x[:, 1]) \
+           -4*np.cos(0.8*x[:, 0]) - 4*np.cos(0.8*x[:, 1]) + 8
 
-    return fun_values
-
-def _function_4(real_nums: np.ndarray) -> np.ndarray:
+def _function_4(x: np.ndarray, sq_term) -> np.ndarray:
     '''
     Function 4. Rosenbrock function.
     f(x)=100*(x1 - x0^2)^2 + (1-x0)^2.
     [-2;2], min f(1,1)=0.
 
     Args:
-        real_nums (np.ndarray): Real numbers.
+        x (np.ndarray): Real numbers.
 
     Returns:
         float: Function values.
     '''
 
-    fun_values = 100*(real_nums[:, 1]-real_nums[:, 0]**2)**2 + (1-real_nums[:, 0])**2
+    #fun_values = 100*(x[:, 1]-x[:, 0]**2)**2 + (1-x[:, 0])**2
+    return 100*sq_term(x[:, 1]-sq_term(x[:, 0])) + sq_term(1-x[:, 0])
 
-    return fun_values
+def _square(x):
+    return x**2
 
 def _convert_to_fitness(fun_values: np.ndarray, params: dict):
     '''
@@ -228,7 +220,7 @@ def _convert_to_fitness(fun_values: np.ndarray, params: dict):
     function = params['function']
     fit_values = None
 
-    if function == 2: # negative optimum
+    if function == 2: # min=-10
         fit_values = 1. / (11 + fun_values)
     else: # min=0
         fit_values = 1. / (1 + fun_values)
@@ -245,27 +237,3 @@ def _within_range(x: float, true_x: float, precision: float):
         within_range = True
 
     return within_range
-
-# def _get_answer(function: int) -> float:
-#     '''
-#     Gets a real optimum value.
-
-#     Args:
-#         function (int): Number of a function being optimized.
-
-#     Returns:
-#         float: Real optimum value.
-#     '''
-
-#     optimum = None
-
-#     if function == 1:
-#         optimum = 0
-#     elif function == 2:
-#         optimum = 0
-#     elif optimum == 3:
-#         optimum = 0
-#     elif optimum == 4:
-#         optimum = 0
-
-#     return optimum

@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from utils import read_parameters
 from encoding import create_population
 from tools import elitism, selection, crossover, mutation
-from benchmark import get_scores, get_score, solved
+from benchmark import get_scores, get_value, solved
 
 def generation(chromosomes: np.ndarray, fit_values: np.ndarray, params: dict):
     '''
@@ -104,7 +104,7 @@ def _set_stats(fit_values: np.ndarray, real_nums: np.ndarray, best_ind: dict,\
 
     best_ind['fitness'] = max_value
     best_ind['solution'] = real_nums[max_index].reshape(-1, dim_number)
-    best_ind['value'] = get_score(best_ind['solution'], params)[0]
+    best_ind['value'] = get_value(best_ind['solution'], params)[0]
 
     max_fit.append(max_value)
     min_fit.append(fit_values.min())
@@ -121,7 +121,7 @@ def _update_stats(fit_values: np.ndarray, real_nums: np.ndarray, best_ind: dict,
         max_index = np.argmax(fit_values)
         best_ind['fitness'] = max_value
         best_ind['solution'] = real_nums[max_index].reshape(-1, dim_number)
-        best_ind['value'] = get_score(best_ind['solution'], params)[0]
+        best_ind['value'] = get_value(best_ind['solution'], params)[0]
 
     max_fit.append(max_value)
     min_fit.append(fit_values.min())
@@ -175,4 +175,3 @@ if __name__ == "__main__":
 
     # run the algorithm
     algorithm(params)
-    
