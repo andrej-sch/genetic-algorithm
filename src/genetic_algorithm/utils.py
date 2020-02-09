@@ -1,12 +1,18 @@
 '''
-TODO
+Utility module.
 '''
 
 import yaml
 
-def read_parameters(file):
+def read_parameters(file) -> dict:
     '''
-    TODO
+    Read yaml file.
+
+    Args:
+        file (str): Path to the yaml file.
+
+    Returns:
+        dict: Contents of the yaml file.
     '''
 
     with open(file, 'r') as yaml_file:
