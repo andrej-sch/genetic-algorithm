@@ -1,5 +1,6 @@
 '''
-TODO
+Benchmark module.
+Used for calculating function and fitness values, and checking if the solution is found.
 '''
 
 import numpy as np
@@ -25,15 +26,29 @@ def get_scores(chromosomes: np.ndarray, dim_muber: int, chrom_length: int, param
 
     return fit_values, real_nums
 
-def get_value(solution: np.ndarray, params: dict):
+def get_value(x: np.ndarray, params: dict) -> float:
     '''
+    Calculates a function value.
+
+    Args:
+        x (np.ndarray): Real value(s) of shape (1, n).
+        params (dict): Algorithm parameters.
+
+    Returns:
+        float: Function value.
     '''
 
-    return  _get_fun_values(solution, params).reshape(-1)
+    # gets ndarray of shape (1,), [0] to acces the element
+    return  _get_fun_values(x, params).reshape(-1)[0]
 
 def solved(best_ind: dict, dim_number: int, params: dict):
     '''
-    TODO
+    Checks if a solution is found.
+
+    Args:
+        best_ind (dict): Best individual.
+        dim_number (int): Number of dimensions.
+        params (dict): Algorithm parameters.
     '''
 
     function = params['function']
@@ -66,12 +81,21 @@ def _decode(chromosomes: np.ndarray, dim_muber: int, chrom_length: int, params: 
     Args:
         chromosomes (np.ndarray): Population.
         dim_number (int): Number of dimensions.
-        chrom_length (int): Length of a chromosome.
+        chrom_length (int): Length of a chromosome for one dimension.
         params (dict): Algorithm parameters.
 
     Returns:
         np.ndarray: Real values.
     '''
+
+    # def _integer_to_real():
+
+    #     lower_bound = params['searchDomain']['lowerBound']
+    #     upper_bound = params['searchDomain']['upperBound']
+
+    #     epsilon = (upper_bound - lower_bound) / (2**chrom_length - 1)
+    #     real_nums = lower_bound + epsilon*integers
+
 
     phenotype = _binary_to_intereger(chromosomes, dim_muber, chrom_length)
     phenotype = _integer_to_real(phenotype, chrom_length, params)
@@ -85,7 +109,7 @@ def _binary_to_intereger(chromosomes: np.ndarray, dim_muber: int, chrom_length: 
     Args:
         integers (np.ndarray): Integer numbers.
         dim_number (int): Number of dimensions.
-        chrom_length (int): Length of a chromosome.
+        chrom_length (int): Length of a chromosome for one dimension.
         params (dict): Algorithm parameters.
 
     Returns:
@@ -110,7 +134,7 @@ def _integer_to_real(integers: np.ndarray, chrom_length: int, params: dict) -> n
     Args:
         integers (np.ndarray): Integer numbers.
         dim_number (int): Number of dimensions.
-        chrom_length (int): Length of a chromosome.
+        chrom_length (int): Length of a chromosome for one dimension.
         params (dict): Algorithm parameters.
 
     Returns:
@@ -125,58 +149,58 @@ def _integer_to_real(integers: np.ndarray, chrom_length: int, params: dict) -> n
 
     return real_nums
 
-def _get_fun_values(real_nums: np.ndarray, params: dict):
+def _get_fun_values(x: np.ndarray, params: dict) -> np.ndarray:
     '''
     Calculates function values.
 
     Args:
-        real_nums (np.ndarray): Real numbers.
+        x (np.ndarray): Real numbers.
         params (dict): Algorithm parameters.
 
     Returns:
-        float: Real optimum value.
+        np.ndarray: Function values.
     '''
 
     function = params['function']
 
     if function == 1:
-        return _function_1(real_nums)
+        return _function_1(x)
     elif function == 2:
-        return _function_2(real_nums)
+        return _function_2(x)
     elif function == 3:
-        return _function_3(real_nums, _square)
+        return _function_3(x, _square)
     elif function == 4:
-        return _function_4(real_nums, _square)
+        return _function_4(x, _square)
 
     return None # error
 
-def _function_1(real_nums: np.ndarray) -> np.ndarray:
+def _function_1(x: np.ndarray) -> np.ndarray:
     '''
     Function 1: f(x)=|x|.
     [-10,10], min f(0) = 0.
 
     Args:
-        real_nums (np.ndarray): Real numbers.
+        x (np.ndarray): Real numbers.
 
     Returns:
         np.ndarray: Function values.
     '''
 
-    return np.abs(real_nums)
+    return np.abs(x)
 
-def _function_2(real_nums: np.ndarray) -> np.ndarray:
+def _function_2(x: np.ndarray) -> np.ndarray:
     '''
     Function 2. f(x)=-10*cos(x)+|0.001*x|.
     [-10,10], min f(0)=-10.
 
     Args:
-        real_nums (np.ndarray): Real numbers.
+        x (np.ndarray): Real numbers.
 
     Returns:
         np.ndarray: Function values.
     '''
 
-    return -10.0*np.cos(real_nums) + np.abs(0.001*real_nums)
+    return -10.0*np.cos(x) + np.abs(0.001*x)
 
 def _function_3(x: np.ndarray, sq_term) -> np.ndarray:
     '''
@@ -210,11 +234,18 @@ def _function_4(x: np.ndarray, sq_term) -> np.ndarray:
     #fun_values = 100*(x[:, 1]-x[:, 0]**2)**2 + (1-x[:, 0])**2
     return 100*sq_term(x[:, 1]-sq_term(x[:, 0])) + sq_term(1-x[:, 0])
 
-def _square(x):
-    return x**2
+_square = lambda x: x**2
 
-def _convert_to_fitness(fun_values: np.ndarray, params: dict):
+def _convert_to_fitness(fun_values: np.ndarray, params: dict) -> np.ndarray:
     '''
+    Converts function values into fitness scores.
+
+    Args:
+        fun_values (np.ndarray): Function values.
+        params (dict): Algorithm parameters.
+
+    Returns:
+        np.ndarray: Fitness scores.
     '''
 
     function = params['function']
@@ -227,8 +258,17 @@ def _convert_to_fitness(fun_values: np.ndarray, params: dict):
 
     return fit_values
 
-def _within_range(x: float, true_x: float, precision: float):
+def _within_range(x: float, true_x: float, precision: float) -> bool:
     '''
+    Check if a value is within a range of given precision.
+
+    Args:
+        x (float): Real value to be checked.
+        true_x (float): True real value.
+        precision (float): Given precision.
+
+    Returns:
+        bool: True if the value is within the range.
     '''
 
     within_range = False
