@@ -5,6 +5,26 @@ TODO
 import numpy as np
 from scipy.stats import rankdata
 
+def create_population(params: dict, dim_number, chrom_length) -> (np.ndarray, int, int):
+    '''
+    Generates chromosomes.
+
+    Args:
+        params (dict): Algorithm parameters.
+
+    Returns:
+        (np.ndarray, int, int): Binary chromosomes (population),
+                                number of dimension, chomosome length per dimension
+    '''
+
+    pop_size = params['algorithm']['populationSize']
+    dim_num = dim_number(params)
+    length = chrom_length(params)
+
+    population = np.random.randint(2, size=(pop_size, length*dim_num))
+
+    return population, dim_num, length
+
 def elitism(chromosomes: np.ndarray, fit_values: np.ndarray, elit_size: int) -> np.ndarray:
     '''
     Perfomrs elitism strategy.
