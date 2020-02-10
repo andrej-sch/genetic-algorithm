@@ -38,13 +38,9 @@ def dim_number(params: dict) -> int:
 
     function = params['function']
 
-    if function == 1:
+    if function == 1 or function == 2:
         return 1
-    elif function == 2:
-        return 1
-    elif function == 3:
-        return 2
-    elif function == 4:
+    elif function == 3 or function == 4:
         return 2
 
     return None # error
@@ -89,5 +85,3 @@ def roulette_wheel(cum_probs: np.ndarray) -> int:
             break
 
     return index
-
-
