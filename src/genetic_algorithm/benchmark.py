@@ -20,7 +20,7 @@ def get_scores(chromosomes: np.ndarray, dim_muber: int, chrom_length: int, param
         np.ndarray: Fitness values.
     '''
 
-    real_nums = _decode(chromosomes, dim_muber, chrom_length, params)
+    real_nums = _decode(chromosomes, dim_muber, chrom_length, params)()
 
     fun_values = _get_fun_values(real_nums, params).reshape(-1)
     fit_values = _convert_to_fitness(fun_values, params)
@@ -54,24 +54,19 @@ def solved(best_ind: dict, dim_number: int, params: dict):
 
     function = params['function']
     precision = float(params['searchDomain']['precision'])
-
     solution = best_ind['solution']
-    solution_found = False
+
+    if function == 4:
+        true_x = 1.0
+    else: # functions 1, 2, 3
+        true_x = 0.
 
     count = 0
-    if function == 4:
-        for sln in solution.flatten():
-            if _within_range(sln, 1., precision):
-                count += 1
-    else: # functions 1, 2, 3
-        for sln in solution.flatten():
-            if _within_range(sln, 0., precision):
-                count += 1
+    for sln in solution.flatten():
+        if _within_range(sln, true_x, precision):
+            count += 1
 
-    if count == dim_number:
-        solution_found = True
-
-    return solution_found
+    return count == dim_number
 
 #-------------------------------------------------------------
 
@@ -89,66 +84,24 @@ def _decode(chromosomes: np.ndarray, dim_muber: int, chrom_length: int, params: 
         np.ndarray: Real values.
     '''
 
-    # def _integer_to_real():
-
-    #     lower_bound = params['searchDomain']['lowerBound']
-    #     upper_bound = params['searchDomain']['upperBound']
-
-    #     epsilon = (upper_bound - lower_bound) / (2**chrom_length - 1)
-    #     real_nums = lower_bound + epsilon*integers
-
-
-    phenotype = _binary_to_intereger(chromosomes, dim_muber, chrom_length)
-    phenotype = _integer_to_real(phenotype, chrom_length, params)
-
-    return phenotype
-
-def _binary_to_intereger(chromosomes: np.ndarray, dim_muber: int, chrom_length: int) -> np.ndarray:
-    '''
-    Converts binary strings into integer values.
-
-    Args:
-        integers (np.ndarray): Integer numbers.
-        dim_number (int): Number of dimensions.
-        chrom_length (int): Length of a chromosome for one dimension.
-        params (dict): Algorithm parameters.
-
-    Returns:
-        np.ndarray: Integer values.
-    '''
-
+    # binary to integers
     integers = np.zeros((chromosomes.shape[0], dim_muber))
     vector = 2**np.arange(chrom_length)[::-1]
 
     for i in range(dim_muber):
         integers[:, i] = chromosomes[:, i*chrom_length:(i+1)*chrom_length].dot(vector)
 
-    #integers = chromosomes.dot(2**np.arange(chrom_length)[::-1])
-    #integers = chromosomes.dot(1 << np.arange(chrom_length)[::-1]) # faster
+    def integer_to_real():
 
-    return integers
+        lower_bound = params['searchDomain']['lowerBound']
+        upper_bound = params['searchDomain']['upperBound']
 
-def _integer_to_real(integers: np.ndarray, chrom_length: int, params: dict) -> np.ndarray:
-    '''
-    Converts integers to real numbers.
+        epsilon = (upper_bound - lower_bound) / (2**chrom_length - 1)
+        real_nums = lower_bound + epsilon*integers
 
-    Args:
-        integers (np.ndarray): Integer numbers.
-        dim_number (int): Number of dimensions.
-        chrom_length (int): Length of a chromosome for one dimension.
-        params (dict): Algorithm parameters.
+        return real_nums
 
-    Returns:
-        np.ndarray: Real values.
-    '''
-
-    lower_bound = params['searchDomain']['lowerBound']
-    upper_bound = params['searchDomain']['upperBound']
-
-    epsilon = (upper_bound - lower_bound) / (2**chrom_length - 1)
-    real_nums = lower_bound + epsilon*integers
-
-    return real_nums
+    return integer_to_real
 
 def _get_fun_values(x: np.ndarray, params: dict) -> np.ndarray:
     '''
@@ -248,14 +201,13 @@ def _convert_to_fitness(fun_values: np.ndarray, params: dict) -> np.ndarray:
     '''
 
     function = params['function']
-    fit_values = None
 
     if function == 2: # min=-10
-        fit_values = 1. / (11 + fun_values)
+        t = 11
     else: # min=0
-        fit_values = 1. / (1 + fun_values)
+        t = 1
 
-    return fit_values
+    return 1. / (t + fun_values)
 
 def _within_range(x: float, true_x: float, precision: float) -> bool:
     '''
@@ -270,9 +222,4 @@ def _within_range(x: float, true_x: float, precision: float) -> bool:
         bool: True if the value is within the range.
     '''
 
-    within_range = False
-
-    if (true_x-precision) <= x <= (true_x+precision):
-        within_range = True
-
-    return within_range
+    return  (true_x-precision) <= x <= (true_x+precision)
