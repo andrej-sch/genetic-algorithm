@@ -1,9 +1,14 @@
 '''
-TODO
+Genetic algorithm tools.
+Used for creating population and perfoming its evolution.
 '''
 
 import numpy as np
 from scipy.stats import rankdata
+from utils import roulette_wheel, swap
+
+# number of parents for cossover operation
+PARENTS = 2
 
 def create_population(params: dict, dim_number, chrom_length) -> (np.ndarray, int, int):
     '''
@@ -11,6 +16,8 @@ def create_population(params: dict, dim_number, chrom_length) -> (np.ndarray, in
 
     Args:
         params (dict): Algorithm parameters.
+        dim_number (function): A function getting number of dimensions.
+        chrom_length (function): A function getting chromosome's length.
 
     Returns:
         (np.ndarray, int, int): Binary chromosomes (population),
@@ -57,17 +64,16 @@ def selection(fit_values: np.ndarray, params: dict) -> int:
     '''
 
     sel_type = params['algorithm']['selection']['type']
-    parents = None
 
     if sel_type == 'proportional':
-        parents = _proportional_selection(fit_values)
+        return _proportional_selection(fit_values, roulette_wheel)
     elif sel_type == 'rank':
-        parents = _rank_selection(fit_values)
+        return _rank_selection(fit_values, roulette_wheel)
     elif sel_type == 'tournament':
         tourn_size = params['algorithm']['selection']['tournamentSize']
-        parents = _tournament_selection(fit_values, tourn_size)
+        return _tournament_selection(fit_values, tourn_size)
 
-    return parents
+    return None
 
 def crossover(chromosomes: np.ndarray, parent1: int, parent2: int, params: dict) -> np.ndarray:
     '''
@@ -88,7 +94,7 @@ def crossover(chromosomes: np.ndarray, parent1: int, parent2: int, params: dict)
     if cross_type == 'one-point':
         child = _one_point_crossover(chromosomes, parent1, parent2)
     elif cross_type == 'two-point':
-        child = _two_point_crossover(chromosomes, parent1, parent2)
+        child = _two_point_crossover(chromosomes, parent1, parent2, swap)
     elif cross_type == 'uniform':
         child = _uniform_crossover(chromosomes, parent1, parent2)
 
@@ -122,48 +128,46 @@ def mutation(chromosomes: np.ndarray, params: dict) -> np.ndarray:
 
 #-------------------------------------------------------------
 
-def _proportional_selection(fit_values: np.ndarray) -> int:
+def _proportional_selection(fit_values: np.ndarray, roulette_wheel) -> list:
     '''
     Randomly selects a parent proportional to its fitness.
 
     Args:
         fit_values (np.ndarray): Fitness values.
+        roulette_wheel (function): A function randomly selecting an index
+                                   proportional to the given cumulative probabilities.
 
     Returns:
-        int: Index of the chosen parent.
+        list: Indeces of selected parent.
     '''
 
     indeces = []
-    parents = 2
 
     # calculate probabilities
     probs = fit_values / fit_values.sum()
     # calculate cumulative probabilities
-    cumprobs = probs.cumsum()
+    cum_probs = probs.cumsum()
 
     # select two parents
-    for _ in range(parents):
-        r = np.random.uniform()
-        for i, prob in enumerate(cumprobs):
-            if r <= prob:
-                indeces.append(i)
-                break
+    for _ in range(PARENTS):
+        indeces.append(roulette_wheel(cum_probs))
 
     return indeces
 
-def _rank_selection(fit_values: np.ndarray) -> int:
+def _rank_selection(fit_values: np.ndarray, roulette_wheel) -> list:
     '''
     Randomly selects a parent proportional to its rank.
 
     Args:
         fit_values (np.ndarray): Fitness values.
+        roulette_wheel (function): A function randomly selecting an index
+                                   proportional to the given cumulative probabilities.
 
     Returns:
-        int: Index of the chosen parent.
+        list: Indeces of selected parents.
     '''
 
     indeces = []
-    parents = 2
 
     # lowest value will ranked as 1
     # highest value will be ranked as n
@@ -174,19 +178,15 @@ def _rank_selection(fit_values: np.ndarray) -> int:
     # calculate probabilities
     probs = ranks / ranks.sum()
     # calculate cumulative probabilities
-    cumprobs = probs.cumsum()
+    cum_probs = probs.cumsum()
 
     # select two parents
-    for _ in range(parents):
-        r = np.random.uniform()
-        for i, prob in enumerate(cumprobs):
-            if r <= prob:
-                indeces.append(i)
-                break
+    for _ in range(PARENTS):
+        indeces.append(roulette_wheel(cum_probs))
 
     return indeces
 
-def _tournament_selection(fit_values: np.ndarray, tourn_size: int) -> int:
+def _tournament_selection(fit_values: np.ndarray, tourn_size: int) -> list:
     '''
     Randomly selects a parent in the tournament.
 
@@ -195,14 +195,13 @@ def _tournament_selection(fit_values: np.ndarray, tourn_size: int) -> int:
         tourn_size (int): Size of the tournament.
 
     Returns:
-        int: Index of the chosen parent.
+        list: Indeces of selected parent.
     '''
 
     selected = []
-    parents = 2
 
     # select two parents
-    for _ in range(parents):
+    for _ in range(PARENTS):
         # randomly select parents for the tournament
         indeces = np.arange(fit_values.size)
         mask = np.random.choice(indeces, tourn_size, replace=False)
@@ -239,7 +238,7 @@ def _one_point_crossover(chromosomes: np.ndarray, parent1: int, parent2: int) ->
 
     return child
 
-def _two_point_crossover(chromosomes: np.ndarray, parent1: int, parent2: int) -> np.ndarray:
+def _two_point_crossover(chromosomes: np.ndarray, parent1: int, parent2: int, swap) -> np.ndarray:
     '''
     Perfomes two-point crossover.
 
@@ -247,6 +246,7 @@ def _two_point_crossover(chromosomes: np.ndarray, parent1: int, parent2: int) ->
         chromosomes (np.ndarray): Current population.
         parent1 (int): Index of the first parent.
         parent2 (int): Index of the second parent.
+        swap (function): Swaps two values if the first one is larger than the second.
 
     Returns:
         np.ndarray: Generated chromosome.
@@ -261,8 +261,7 @@ def _two_point_crossover(chromosomes: np.ndarray, parent1: int, parent2: int) ->
         cp2 = np.random.randint(1, chrom_length-1)
 
     # swap the values if cross_point1 > cross_point2
-    if cp1 > cp2:
-        cp1, cp2 = cp2, cp1
+    cp1, cp2 = swap(cp1, cp2)
 
     # recombination
     child = np.zeros(chrom_length, dtype=int)

@@ -4,6 +4,7 @@ Used for calculating function and fitness values, and checking if the solution i
 '''
 
 import numpy as np
+from utils import square
 
 def get_scores(chromosomes: np.ndarray, dim_muber: int, chrom_length: int, params: dict):
     '''
@@ -168,9 +169,9 @@ def _get_fun_values(x: np.ndarray, params: dict) -> np.ndarray:
     elif function == 2:
         return _function_2(x)
     elif function == 3:
-        return _function_3(x, _square)
+        return _function_3(x, square)
     elif function == 4:
-        return _function_4(x, _square)
+        return _function_4(x, square)
 
     return None # error
 
@@ -233,8 +234,6 @@ def _function_4(x: np.ndarray, sq_term) -> np.ndarray:
 
     #fun_values = 100*(x[:, 1]-x[:, 0]**2)**2 + (1-x[:, 0])**2
     return 100*sq_term(x[:, 1]-sq_term(x[:, 0])) + sq_term(1-x[:, 0])
-
-_square = lambda x: x**2
 
 def _convert_to_fitness(fun_values: np.ndarray, params: dict) -> np.ndarray:
     '''

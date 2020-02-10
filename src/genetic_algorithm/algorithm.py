@@ -5,9 +5,9 @@ TODO
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
-from utils import read_parameters
-from encoding import create_population
-from tools import elitism, selection, crossover, mutation
+from utils import read_params, dim_number, chromosome_length
+#from encoding import create_population
+from tools import create_population, elitism, selection, crossover, mutation
 from benchmark import get_scores, get_value, solved
 
 def generation(chromosomes: np.ndarray, fit_values: np.ndarray, params: dict):
@@ -66,26 +66,26 @@ def algorithm(params: dict):
     ave_fit = []
 
     # create population
-    chromosomes, dim_number, chrom_length = create_population(params)
+    chromosomes, dim_num, chrom_length = create_population(params, dim_number, chromosome_length)
 
     # fitness values
-    fit_values, real_nums = get_scores(chromosomes, dim_number, chrom_length, params)
+    fit_values, real_nums = get_scores(chromosomes, dim_num, chrom_length, params)
 
-    _set_stats(fit_values, real_nums, best_ind, dim_number, max_fit, min_fit, ave_fit)
+    _set_stats(fit_values, real_nums, best_ind, dim_num, max_fit, min_fit, ave_fit)
 
     for i in range(iter_num):
 
         print(f'Generation #{i+1}...')
 
         chromosomes = generation(chromosomes, fit_values, params)
-        fit_values, real_nums = get_scores(chromosomes, dim_number, chrom_length, params)
+        fit_values, real_nums = get_scores(chromosomes, dim_num, chrom_length, params)
 
         # update stats
-        _update_stats(fit_values, real_nums, best_ind, dim_number, max_fit, min_fit, ave_fit)
+        _update_stats(fit_values, real_nums, best_ind, dim_num, max_fit, min_fit, ave_fit)
 
         # check if soultion is found
         if not solution_found:
-            solution_found = solved(best_ind, dim_number, params)
+            solution_found = solved(best_ind, dim_num, params)
 
             if solution_found:
                 best_ind['generation'] = i+1
@@ -104,7 +104,7 @@ def _set_stats(fit_values: np.ndarray, real_nums: np.ndarray, best_ind: dict,\
 
     best_ind['fitness'] = max_value
     best_ind['solution'] = real_nums[max_index].reshape(-1, dim_number)
-    best_ind['value'] = get_value(best_ind['solution'], params)[0]
+    best_ind['value'] = get_value(best_ind['solution'], params)
 
     max_fit.append(max_value)
     min_fit.append(fit_values.min())
@@ -121,7 +121,7 @@ def _update_stats(fit_values: np.ndarray, real_nums: np.ndarray, best_ind: dict,
         max_index = np.argmax(fit_values)
         best_ind['fitness'] = max_value
         best_ind['solution'] = real_nums[max_index].reshape(-1, dim_number)
-        best_ind['value'] = get_value(best_ind['solution'], params)[0]
+        best_ind['value'] = get_value(best_ind['solution'], params)
 
     max_fit.append(max_value)
     min_fit.append(fit_values.min())
@@ -171,7 +171,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # read parameters
-    params = read_parameters(args.params)
+    params = read_params(args.params)
 
     # run the algorithm
     algorithm(params)
