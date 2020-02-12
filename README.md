@@ -34,6 +34,10 @@ Combination | Description
 `F10` | Step Over
 `Shift+F5` | Stop
 
+## 8. Domain-specific language
+
+__YAML as DSL__. The project utilizes genetic algorithm hyper-parameters being specified in YAML file as `parameters.yaml`. The file is located in the project's root directory. It is parsed by an external library [PyYAML](https://pyyaml.org/). The contents of the file are read in the module `algorithm.py` (line 189) and are further passed to the main function of the algorithm (line 192).
+
 ## 9. Functional Programming
 
 Task: _Prove that you have covered all functional definitions in your code as:_
@@ -46,7 +50,7 @@ Task: _Prove that you have covered all functional definitions in your code as:_
 
 Final data structures
 
-Side effect free function
+Side effect free functions. Examples of these functions can be found throughout the modules. In module `tools.py`: functon `elitism` (line 35); functions `_proportional_selection` (line 131), `_rank_selection` (line 157), `_tournament_selection` (line 189), `_one_point_crossover` (line 216), `_two_point_crossover` (line 241) and `_uniform_crossover` (line 274) are not pure due to the random number generator component, but rather non-deterministic side effect functions. In module `benchmark.py` the example of side free functions are `_decode` (line 73), `_function_1` (line 131), `_function_2` (line 145), `_function_3` (line 159), `_function_4` (line 175), `_convert_to_fitness` (line 191), `_within_range` (line 212). In the module `utils.py`: functions `dim_number` (line 28) and `chromosome_length` (line 48); the function `roulette_wheel` (line 68) is again not pure due to the random component, but a non-deterministic side effect function.
 
 The use of higher order function can be found in the module `tools.py` functions `create_population` line 13, `_proportional_selection` line 131, `_rank_selection` line157, and `_two_point_crossover` line 241. As well as in the module `benchmark.py` functions `_function_3` line 159, `_function_4` line 175.
 
