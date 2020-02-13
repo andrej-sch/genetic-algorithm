@@ -25,6 +25,9 @@ def get_scores(chromosomes: np.ndarray, dim_muber: int, chrom_length: int, param
     fun_values = _get_fun_values(real_nums, params).reshape(-1)
     fit_values = _convert_to_fitness(fun_values, params)
 
+    assert isinstance(fun_values, np.ndarray) 
+    assert isinstance(fit_values, np.ndarray)
+
     return fit_values, real_nums
 
 def get_value(x: np.ndarray, params: dict) -> float:
