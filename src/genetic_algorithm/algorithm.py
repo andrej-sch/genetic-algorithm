@@ -33,7 +33,7 @@ def algorithm(params: dict):
     # get fitness values and decoded real numbers
     fit_values, real_nums = get_scores(chromosomes, dim_num, chrom_length, params)
 
-    # update statistics
+    # update algorithm statistics
     update_stats(fit_values, real_nums, best_ind, dim_num, max_fit, min_fit, ave_fit)
 
     for i in range(iter_num):
@@ -45,7 +45,7 @@ def algorithm(params: dict):
         # get new fitness values and decoded real numbers
         fit_values, real_nums = get_scores(chromosomes, dim_num, chrom_length, params)
 
-        # update stats
+        # update algorithm statistics
         update_stats(fit_values, real_nums, best_ind, dim_num, max_fit, min_fit, ave_fit)
 
         # check if soultion is found
