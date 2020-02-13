@@ -92,13 +92,13 @@ def crossover(chromosomes: np.ndarray, parent1: int, parent2: int, params: dict)
     cross_type = params['algorithm']['crossover']['type']
 
     if cross_type == 'one-point':
-        child = _one_point_crossover(chromosomes, parent1, parent2)
+        return _one_point_crossover(chromosomes, parent1, parent2)
     elif cross_type == 'two-point':
-        child = _two_point_crossover(chromosomes, parent1, parent2, swap)
+        return _two_point_crossover(chromosomes, parent1, parent2, swap)
     elif cross_type == 'uniform':
-        child = _uniform_crossover(chromosomes, parent1, parent2)
+        return _uniform_crossover(chromosomes, parent1, parent2)
 
-    return child
+    return None # error
 
 def mutation(chromosomes: np.ndarray, params: dict) -> np.ndarray:
     '''
@@ -115,16 +115,16 @@ def mutation(chromosomes: np.ndarray, params: dict) -> np.ndarray:
     mut_type = params['algorithm']['mutation']['type']
 
     if mut_type == 'low':
-        chromosomes = _low_mutation(chromosomes)
+        return _low_mutation(chromosomes)
     elif mut_type == 'medium':
-        chromosomes = _medium_mutation(chromosomes)
+        return _medium_mutation(chromosomes)
     elif mut_type == 'high':
-        chromosomes = _high_mutation(chromosomes)
+        return _high_mutation(chromosomes)
     elif mut_type == 'by_value':
         probability = params['algorithm']['mutation']['probability']
-        chromosomes = _mutation(chromosomes, probability)
+        return _mutation(chromosomes, probability)
 
-    return chromosomes
+    return None # error
 
 #-------------------------------------------------------------
 
@@ -169,7 +169,7 @@ def _rank_selection(fit_values: np.ndarray, roulette_wheel) -> list:
 
     indeces = []
 
-    # lowest value will ranked as 1
+    # lowest value will be ranked as 1
     # highest value will be ranked as n
     # in our case higher value of rank corresponds to a better fitness value.
 
