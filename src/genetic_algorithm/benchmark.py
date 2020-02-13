@@ -4,15 +4,15 @@ Used for calculating function and fitness values, and checking if the solution i
 '''
 
 import numpy as np
-from utils import square
+from genetic_algorithm.utils import square
 
-def get_scores(chromosomes: np.ndarray, dim_muber: int, chrom_length: int, params: dict):
+def get_scores(chromosomes: np.ndarray, dim_num: int, chrom_length: int, params: dict):
     '''
     Assigns fitness to each individual.
 
     Args:
         chromosomes (np.ndarray): Population.
-        dim_number (int): Number of dimensions.
+        dim_num (int): Number of dimensions.
         chrom_length (int): Length of a chromosome.
         params (dict): Algorithm parameters.
 
@@ -20,7 +20,7 @@ def get_scores(chromosomes: np.ndarray, dim_muber: int, chrom_length: int, param
         np.ndarray: Fitness values.
     '''
 
-    real_nums = _decode(chromosomes, dim_muber, chrom_length, params)()
+    real_nums = _decode(chromosomes, dim_num, chrom_length, params)()
 
     fun_values = _get_fun_values(real_nums, params).reshape(-1)
     fit_values = _convert_to_fitness(fun_values, params)

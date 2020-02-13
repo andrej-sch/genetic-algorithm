@@ -5,9 +5,9 @@ TODO
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
-from utils import read_params, dim_number, chromosome_length
-from tools import create_population, elitism, selection, crossover, mutation
-from benchmark import get_scores, get_value, solved
+from genetic_algorithm.utils import read_params, dim_number, chromosome_length
+from genetic_algorithm.tools import create_population, elitism, selection, crossover, mutation
+from genetic_algorithm.benchmark import get_scores, get_value, solved
 
 def algorithm(params: dict):
     '''
