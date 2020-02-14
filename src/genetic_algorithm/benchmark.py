@@ -188,7 +188,6 @@ def _function_4(x: np.ndarray, sq_term) -> np.ndarray:
         float: Function values.
     '''
 
-    #fun_values = 100*(x[:, 1]-x[:, 0]**2)**2 + (1-x[:, 0])**2
     return 100*sq_term(x[:, 1]-sq_term(x[:, 0])) + sq_term(1-x[:, 0])
 
 def _convert_to_fitness(fun_values: np.ndarray, params: dict) -> np.ndarray:
