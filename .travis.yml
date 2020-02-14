@@ -5,6 +5,7 @@ python:
   
 # command to install dependencies
 install:
+  - export PYTHONPATH=$PYTHONPATH:$(pwd)/src/
   - pip install -r requirements.txt
 
 # command to run tests
