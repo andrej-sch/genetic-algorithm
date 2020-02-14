@@ -1,7 +1,22 @@
 # Genetic Algorithms for Unconstrained Single-Objective Optimization Problems
 
-1. UML Diagrams(at least 3 diagrams)
-2. Metrics (at least two. Sonarcube would be great)
+## 1. UML Diagrams(at least 3 diagrams)
+
+* Activity diagram
+
+![activity](images/activity_diagram.png)
+
+* Component diagram
+
+![component](images/component_diagram.png)
+
+* Sequence diagram
+
+![sequence](images/sequence_diagram.png)
+
+## 2. Metrics (at least two. Sonarcube would be great)
+
+TODO
 
 ## 3. Clean Code Development
 
@@ -33,10 +48,17 @@ __Use Mocks__. The implemented unit tests use mock-up objects. For example, func
 
 __Functional Techniques__. The project tries to follow the functional teqniques. For more information, see point 7 below.
 
-1. Build Management with any Build System as Ant, Maven, Gradle, etc. (only travis is not enough) Do e.g. generate Docs, call tests, etc.
-2. Integrate some nice Unit-Tests in your Code to be integrated in the Build
+## 4. Build Management with any Build System as Ant, Maven, Gradle, etc. (only travis is not enough) Do e.g. generate Docs, call tests, etc.
 
-3. Continous Delivery (show me your pipeline in e.g. Jenkins, Travis-CI, Circle-CI, etc.)
+TODO
+
+## 5. Integrate some nice Unit-Tests in your Code to be integrated in the Build
+
+TODO
+
+## 6. Continous Delivery (show me your pipeline in e.g. Jenkins, Travis-CI, Circle-CI, etc.)
+
+TODO
 
 ## 7. Integrated Development Environment
 
