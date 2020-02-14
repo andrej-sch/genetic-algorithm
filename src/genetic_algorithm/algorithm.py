@@ -12,7 +12,7 @@ from genetic_algorithm.benchmark import get_scores, get_value, solved
 def algorithm(params: dict):
     '''
     Runs genetic algorithm.
-    
+
     Args
         params (dict): Algorithm parameters.
     '''

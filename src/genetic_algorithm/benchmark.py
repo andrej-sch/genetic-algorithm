@@ -204,9 +204,9 @@ def _convert_to_fitness(fun_values: np.ndarray, params: dict) -> np.ndarray:
 
     function = params['function']
 
-    if function == 2: # min=-10
+    if function == 2: # minimum equals -10
         t = 11
-    else: # min=0
+    else: # minimum equals 0
         t = 1
 
     return 1. / (t + fun_values)
