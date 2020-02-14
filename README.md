@@ -14,9 +14,27 @@
 
 ![sequence](images/sequence_diagram.png)
 
-## 2. Metrics (at least two. Sonarcube would be great)
+## 2. Metrics
 
-TODO
+To calculate various metrics, [SonarCloud](https://sonarcloud.io/dashboard?id=andrej-sch_genetic-algorithm) was integrated with the project.
+
+![vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=andrej-sch_genetic-algorithm&metric=vulnerabilities)
+
+![bugs](https://sonarcloud.io/api/project_badges/measure?project=andrej-sch_genetic-algorithm&metric=bugs)
+
+![code_smells](https://sonarcloud.io/api/project_badges/measure?project=andrej-sch_genetic-algorithm&metric=code_smells)
+
+![ncloc](https://sonarcloud.io/api/project_badges/measure?project=andrej-sch_genetic-algorithm&metric=ncloc)
+
+![duplicated_lines_density](https://sonarcloud.io/api/project_badges/measure?project=andrej-sch_genetic-algorithm&metric=duplicated_lines_density)
+
+![alert_status](https://sonarcloud.io/api/project_badges/measure?project=andrej-sch_genetic-algorithm&metric=alert_status)
+
+![sqale_rating](https://sonarcloud.io/api/project_badges/measure?project=andrej-sch_genetic-algorithm&metric=sqale_rating)
+
+![reliability_rating](https://sonarcloud.io/api/project_badges/measure?project=andrej-sch_genetic-algorithm&metric=reliability_rating)
+
+![security_rating](https://sonarcloud.io/api/project_badges/measure?project=andrej-sch_genetic-algorithm&metric=security_rating)
 
 ## 3. Clean Code Development
 
