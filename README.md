@@ -8,6 +8,12 @@ Dependencies:
    - scipy
    - pyyaml
 
+To install dependencies, run:
+
+``` shell
+$ pip install -r requirements.txt
+```
+
 Parameters for the algorithm are set up in the `params.yaml` file in the root directory.
 
 To run the algorithm, execute the following command:
