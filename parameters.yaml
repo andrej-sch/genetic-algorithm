@@ -1,5 +1,5 @@
 # number of a fucntion, from 1 to 5
-function: 1
+function: 3
 
 searchDomain:
         lowerBound: -10
