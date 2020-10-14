@@ -1,14 +1,16 @@
 # Genetic Algorithms for Unconstrained Single-Objective Optimization Problems
 
-## Brief Introduction
+Project work in the course "Advanced Software Engineering".
 
-Python version: >=3.7.
+## Brief Information
+
+Python: tested on version 3.7.
 
 Dependencies:
 
-   - numpy
-   - scipy
-   - pyyaml
+- numpy
+- scipy
+- pyyaml
 
 To install the dependencies, run:
 
@@ -16,12 +18,12 @@ To install the dependencies, run:
 $ pip install -r requirements.txt
 ```
 
-Parameters for the algorithm are set up in the `params.yaml` file in the root directory.
+Parameters for the algorithm are set up in the `params.yaml` file in the `./src/genetic_algorithm` directory.
 
 To run the algorithm, execute the following command:
 
 ``` shell
-$ python src/genetic_algorithm/algorithm.py parameters.yaml
+$ python algorithm.py parameters.yaml
 ```
 
 ## 1. UML Diagrams(at least 3 diagrams)
@@ -64,9 +66,9 @@ To calculate various metrics, [SonarCloud](https://sonarcloud.io/dashboard?id=an
 
 __Kill Useless Code.__ There is no code without a task left in the source files. Any piece of code can be run depending on the algorithm parameters.
 
-__Delete Useless Comments.__ The source code is sufficiently documented on the module as well as function levels (dockstrings). Some comments throughout the code can fascilitate understanding of the logic. For example, in module `tools.py` in function `_rank_selection` the comments in the beginning of the function explain how the rank selection is to be implemented.
+__Delete Useless Comments.__ The source code is sufficiently documented on the module as well as function levels (dockstrings). Some comments throughout the code can fascilitate understanding of the logic. For example, in module [tools.py](https://github.com/andrej-sch/genetic-algorithm/blob/master/src/genetic_algorithm/tools.py) in function [_rank_selection](https://github.com/andrej-sch/genetic-algorithm/blob/e87532febaa65f05b0846e4c3605c1a7cfef0e22/src/genetic_algorithm/tools.py#L157) the comments in the beginning of the function explain how the rank selection is to be implemented.
 
-__Invest in a Precise Naming.__ Each module, function and variable name has a meaninngful name. E.g., module `tools.py` contains functions such as `create_population` (line 13), `selection` (line 54), `crossover` (line 78), `mutation` (libe 103), and others, which perfom corresponding genetic algorithm operations of the principle of a natural selection. They, in turn, have local variables such as `population` (line 31), `child` (line 101), `chromosomes` (line 118), and many others, which speak for themselves.
+__Invest in a Precise Naming.__ Each module, function and variable name has a meaninngful name. E.g., module [tools.py](https://github.com/andrej-sch/genetic-algorithm/blob/master/src/genetic_algorithm/tools.py) contains functions such as [create_population](https://github.com/andrej-sch/genetic-algorithm/blob/e87532febaa65f05b0846e4c3605c1a7cfef0e22/src/genetic_algorithm/tools.py#L13), [selection](https://github.com/andrej-sch/genetic-algorithm/blob/e87532febaa65f05b0846e4c3605c1a7cfef0e22/src/genetic_algorithm/tools.py#L54), [crossover](https://github.com/andrej-sch/genetic-algorithm/blob/e87532febaa65f05b0846e4c3605c1a7cfef0e22/src/genetic_algorithm/tools.py#L78), [mutation](https://github.com/andrej-sch/genetic-algorithm/blob/e87532febaa65f05b0846e4c3605c1a7cfef0e22/src/genetic_algorithm/tools.py#L103), and others, which perfom corresponding genetic algorithm operations of the principle of a natural selection. They, in turn, have local variables such as [population](https://github.com/andrej-sch/genetic-algorithm/blob/e87532febaa65f05b0846e4c3605c1a7cfef0e22/src/genetic_algorithm/tools.py#L31), [child](https://github.com/andrej-sch/genetic-algorithm/blob/e87532febaa65f05b0846e4c3605c1a7cfef0e22/src/genetic_algorithm/tools.py#L235), [chromosomes](https://github.com/andrej-sch/genetic-algorithm/blob/e87532febaa65f05b0846e4c3605c1a7cfef0e22/src/genetic_algorithm/tools.py#L118), and many others, which speak for themselves.
 
 __Avoid Magic Numbers.__ This realization of the genetic algorithm utilizes two parents for reproduction (module `tools.py`). To avoid a magic number '2' in loops in functions `_proportional_selection` (line 131), `_rank_selection` (line 157) and `_tournament_selection` (line 189), a constant `PARENTS` (line 11) is defined instead.
 
