@@ -4,7 +4,7 @@ Used for calculating function and fitness values, and checking if the solution i
 '''
 
 import numpy as np
-from genetic_algorithm.utils import square
+from genetic_algorithm.core.utils import square
 
 def get_scores(chromosomes: np.ndarray, dim_num: int, chrom_length: int, params: dict):
     '''

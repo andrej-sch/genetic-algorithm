@@ -1,13 +1,10 @@
-'''
-TODO
-'''
+'''Main module.'''
 
-import argparse
 import numpy as np
 import matplotlib.pyplot as plt
-from genetic_algorithm.utils import read_params, dim_number, chromosome_length
-from genetic_algorithm.tools import create_population, elitism, selection, crossover, mutation
-from genetic_algorithm.benchmark import get_scores, get_value, solved
+from genetic_algorithm.core.utils import dim_number, chromosome_length
+from genetic_algorithm.core.tools import create_population, elitism, selection, crossover, mutation
+from genetic_algorithm.core.benchmark import get_scores, get_value, solved
 
 def algorithm(params: dict):
     '''
@@ -34,7 +31,7 @@ def algorithm(params: dict):
     fit_values, real_nums = get_scores(chromosomes, dim_num, chrom_length, params)
 
     # update algorithm statistics
-    update_stats(fit_values, real_nums, best_ind, dim_num, max_fit, min_fit, ave_fit)
+    update_stats(fit_values, real_nums, best_ind, dim_num, max_fit, min_fit, ave_fit, params)
 
     for i in range(iter_num):
         print(f'Generation #{i+1}...')
@@ -46,7 +43,7 @@ def algorithm(params: dict):
         fit_values, real_nums = get_scores(chromosomes, dim_num, chrom_length, params)
 
         # update algorithm statistics
-        update_stats(fit_values, real_nums, best_ind, dim_num, max_fit, min_fit, ave_fit)
+        update_stats(fit_values, real_nums, best_ind, dim_num, max_fit, min_fit, ave_fit, params)
 
         # check if soultion is found
         if not solution_found:
@@ -75,7 +72,6 @@ def generation(chromosomes: np.ndarray, fit_values: np.ndarray, params: dict) ->
 
     pop_size = params['algorithm']['populationSize']
 
-    elit_size = 0
     # perform elitism strategy
     if params['algorithm']['elitism']['strategy'] == 'enabled':
         elit_size = params['algorithm']['elitism']['size']
@@ -99,13 +95,13 @@ def generation(chromosomes: np.ndarray, fit_values: np.ndarray, params: dict) ->
     children = mutation(children, params)
 
     # concatinate with the best individuals
-    if elit_size > 0:
+    if params['algorithm']['elitism']['strategy'] == 'enabled':
         children = np.vstack((children, best_inds))
 
     return children
 
 def update_stats(fit_values: np.ndarray, real_nums: np.ndarray, best_ind: dict,\
-                  dim_number: int, max_fit: list, min_fit: list, ave_fit: list):
+                  dim_number: int, max_fit: list, min_fit: list, ave_fit: list, params: dict):
     '''
     Updates best individual found and traks fitness statistics.
 
@@ -176,17 +172,3 @@ def display_plot(max_fit: list, min_fit: list, ave_fit: list, iter_num: int):
     plt.xticks(np.arange(0, iter_num+1, 2.0))
     plt.legend()
     plt.show()
-
-if __name__ == "__main__":
-
-    # define command line arguments
-    parser = argparse.ArgumentParser()
-    parser.add_argument("params", type=str, 
-                        help="path to the yaml file defining parameters")
-    args = parser.parse_args()
-
-    # read parameters
-    params = read_params(args.params)
-
-    # run the algorithm
-    algorithm(params)

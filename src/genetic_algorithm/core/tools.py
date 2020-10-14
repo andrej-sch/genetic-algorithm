@@ -5,7 +5,7 @@ Used for creating population and perfoming its evolution.
 
 import numpy as np
 from scipy.stats import rankdata
-from genetic_algorithm.utils import roulette_wheel, swap
+from genetic_algorithm.core.utils import roulette_wheel, swap
 
 # number of parents for cossover operation
 PARENTS = 2
